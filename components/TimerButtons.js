@@ -26,6 +26,6 @@ const styles = StyleSheet.create({
     container: {
         flexDirection:'row', 
         flexWrap:'wrap',
-        justifyContent: 'space-around',
+        justifyContent: 'space-evenly',
     }
 })

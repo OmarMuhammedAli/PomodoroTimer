@@ -4,13 +4,14 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import {vibrate} from '../utils'
 import Timer from './Timer'
 import TimerButtons from './TimerButtons'
+import Header from './Header'
 
 export default class PomodoroTimer extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            timer: 25 * 60,
-            timerTextDisplay: '25:00',
+            timer: this.props.work * 60,
+            timerTextDisplay: `${this.props.work}:00`,
             message: 'Work Time!',
             isWorkTime: true,
             isRunning: true
@@ -34,16 +35,16 @@ export default class PomodoroTimer extends React.Component {
     }
 
     toggleTimers = () => {
-        
+
         if (this.state.isWorkTime) this.setState({
-            timer: 5 * 60,
-            timerTextDisplay: '05:00',
+            timer: this.props.break * 60,
+            timerTextDisplay: `${this.props.break}:00`,
             message: 'Break Time!',
             isWorkTime: false
         })
         else this.setState({
-            timer: 25 * 60,
-            timerTextDisplay: '25:00',
+            timer: this.props.work * 60,
+            timerTextDisplay: `${this.props.work}:00`,
             message: 'Work Time!',
             isWorkTime: true
         })
@@ -68,8 +69,8 @@ export default class PomodoroTimer extends React.Component {
         clearInterval(this.timer)
         this.setState({
             isRunning: false,
-            timer: 25 * 60,
-            timerTextDisplay: '25:00',
+            timer: this.props.work * 60,
+            timerTextDisplay: `${this.props.work}:00`,
             message: 'Work Time!',
             isWorkTime: true,
         })
@@ -84,9 +85,26 @@ export default class PomodoroTimer extends React.Component {
       }
 
     render() {
+        let style
+        if (this.state.isWorkTime) {
+            style = styles.containerWorkTime
+        } else {
+            style = styles.containerBreakTime
+        }
         return (
-            <View style={styles.container}>
-                <Timer intervalDisplay={this.state.timerTextDisplay} message={this.state.message} />
+            <View style={style}>
+                {!this.state.isRunning && 
+                <Header 
+                work={this.props.work}
+                break={this.props.break}
+                handleWorkTime={this.props.handleWorkTime}
+                handleBreakTime={this.props.handleBreakTime}
+                />
+                }
+                <Timer 
+                intervalDisplay={this.state.timerTextDisplay}
+                message={this.state.message} 
+                />
                 <TimerButtons 
                 pause={this.pause} 
                 isRunning={this.state.isRunning} 
@@ -100,9 +118,14 @@ export default class PomodoroTimer extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      justifyContent: 'center',
+    containerWorkTime: {
+        flex: 1,
+        backgroundColor: '#728bd4',
+        justifyContent: 'center'
     },
+    containerBreakTime: {
+        flex: 1,
+        backgroundColor: '#72d4bb',
+        justifyContent: 'center'
+    }
  });
